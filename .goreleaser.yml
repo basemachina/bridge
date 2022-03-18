@@ -1,0 +1,61 @@
+builds:
+  - id: bridge
+    main: ./cmd/bridge/main.go
+    binary: bridge
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags: -w -s -X main.version={{.Version}} -X main.serviceName=bridge
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "6"
+      - "7"
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: linux
+        goarch: arm
+        goarm: "7"
+
+archives:
+- builds:
+  - bridge
+  name_template: 'bridge_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+  replacements:
+    darwin: macOS
+    linux: Linux
+    386: i386
+    amd64: x86_64
+  files:
+  - LICENSE
+
+nfpms:
+  - license: BSD 3-Clause License
+    maintainer: Basemachina, Inc. <support@basemachina.com>
+    homepage: https://github.com/basemachina/bridge
+    bindir: /usr/local/bin
+    description: "secure gateway by basemachina"
+    formats:
+      - apk
+      - deb
+      - rpm
+
+checksum:
+  name_template: 'bridge_checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - Merge pull request
+    - Merge branch
