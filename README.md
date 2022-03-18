@@ -1,14 +1,16 @@
 # Bridge
 
-[![.github/workflows/test.yml](https://github.com/basemachina/bridge/actions/workflows/test.yml/badge.svg)](https://github.com/basemachina/bridge/actions/workflows/test.yml)
+[![.github/workflows/test.yml](https://github.com/basemachina/bridge/actions/workflows/test.yml/badge.svg)](https://github.com/basemachina/bridge/actions/workflows/test.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/basemachina/bridge.svg)](https://pkg.go.dev/github.com/basemachina/bridge)
 
-https://basemachina.com/
+- https://about.basemachina.com
+- [Documentation](https://docs.basemachina.com/what_is_agent/)
+- Support: support@basemachina.com
 
-Bridge is a gateway with an authentication feature that relays access from BaseMachina to a tenant's data sources. (Database, API, etc...)
+Bridge is a secure gateway that relays access from BaseMachina to a tenant's data sources. (Database, API, etc...)
 
 ## Q&A
 
-Please post any questions about the bridge or the hosted service on the [discussions](https://github.com/basemachina/bridge/discussions).
+Please post any questions about the bridge or the hosted service on the [discussions](https://github.com/basemachina/basemachina/discussions).
 
 ## Bugs
 
