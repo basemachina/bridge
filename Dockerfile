@@ -3,7 +3,7 @@ ARG VERSION
 ENV CGO_ENABLED=0
 WORKDIR /go/src/github.com/basemachina/bridge
 COPY . .
-RUN go build -mod=readonly -o bridge -trimpath -ldflags "-w -s -X main.version=$VERSION -X main.serviceName=bridge" ./cmd/bridge
+RUN go build -mod=readonly -o bridge -buildvcs=false -trimpath -ldflags "-w -s -X main.version=$VERSION -X main.serviceName=bridge" ./cmd/bridge
 
 # runtime image
 FROM alpine:3.15
