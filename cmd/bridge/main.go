@@ -19,9 +19,6 @@ import (
 var (
 	serviceName string
 	version     string
-	// TODO(codehex): どこかしらから取得できるようにしたい
-	// basemachina api の ua も含めるなら、context から取得したほうが良さそう
-	defaultUA = "basemachina-bridge/" + version
 )
 
 func main() {
