@@ -1,6 +1,6 @@
 builds:
   - id: bridge
-    main: ./cmd/bridge/main.go
+    main: ./cmd/bridge
     binary: bridge
     env:
       - CGO_ENABLED=0
