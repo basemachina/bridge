@@ -41,10 +41,11 @@ type Env struct {
 
 // HTTPHandlerConfig is a config to setup bridge http handler.
 type HTTPHandlerConfig struct {
-	Logger          logr.Logger
-	PublicKeyGetter auth.PublicKeyGetter
-	TenantID        string
-	Middlewares     []bridgehttp.Middleware
+	Logger             logr.Logger
+	PublicKeyGetter    auth.PublicKeyGetter
+	RegisterUserObject auth.TenantIDGetter
+	TenantID           string
+	Middlewares        []bridgehttp.Middleware
 }
 
 // NewHTTPHandler is a handler for handling any requests.
@@ -60,9 +61,10 @@ func NewHTTPHandler(c *HTTPHandlerConfig) http.Handler {
 	middlewares := append(c.Middlewares,
 		ctxtime.Middleware(),
 		auth.Middleware(&auth.MiddlewareConfig{
-			TenantID:        c.TenantID,
-			Logger:          c.Logger.WithName("auth"),
-			PublicKeyGetter: c.PublicKeyGetter,
+			TenantID:           c.TenantID,
+			Logger:             c.Logger.WithName("auth"),
+			PublicKeyGetter:    c.PublicKeyGetter,
+			RegisterUserObject: c.RegisterUserObject,
 		}),
 	)
 	mux.Handle(ProxyPath, bridgehttp.UseMiddlewares(

@@ -106,6 +106,7 @@ func TestMiddleware(t *testing.T) {
 				PublicKeyGetter: &StaticPublicKeyGetter{
 					PublicKey: ret.PublicKeySet,
 				},
+				RegisterUserObject: User{},
 			})
 			middleware(h).ServeHTTP(rec, tc.req)
 			if tc.wantStatus != rec.Code {
