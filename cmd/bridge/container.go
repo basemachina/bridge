@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/basemachina/bridge"
+	"github.com/basemachina/bridge/internal/auth"
 	"github.com/go-logr/logr"
 )
 
@@ -27,9 +28,10 @@ func BridgeContainerProvider() (*Container, func(), error) {
 		return nil, nil, err
 	}
 	httpHandlerConfig := &bridge.HTTPHandlerConfig{
-		Logger:          logger,
-		PublicKeyGetter: fetchWorker,
-		TenantID:        env.TenantID,
+		Logger:             logger,
+		PublicKeyGetter:    fetchWorker,
+		TenantID:           env.TenantID,
+		RegisterUserObject: auth.User{},
 	}
 	handler := bridge.NewHTTPHandler(httpHandlerConfig)
 	server, cleanup3, err := NewHTTPServer(env, handler)
