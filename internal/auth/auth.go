@@ -97,7 +97,7 @@ func Middleware(c *MiddlewareConfig) bridgehttp.Middleware {
 				return
 			}
 
-			if tenantID != c.TenantID {
+			if c.TenantID != "" && tenantID != c.TenantID {
 				c.Logger.Info("mismatch tenant ID", tenantID, c.TenantID)
 				w.WriteHeader(http.StatusUnauthorized)
 				return
