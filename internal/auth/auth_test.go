@@ -50,6 +50,19 @@ func TestMiddleware(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		{
+			name: "valid tenant ID config is empty",
+			req: func() *http.Request {
+				req := httptest.NewRequest("GET", "/", nil)
+				req.Header.Add(headerKey, "bearer "+string(accessToken))
+				ctx := req.Context()
+				now := tm.Add(time.Second) // adding for "nbf"
+				ctx = ctxtime.WithTime(ctx, now)
+				return req.WithContext(ctx)
+			}(),
+			tenantID:   "",
+			wantStatus: http.StatusOK,
+		},
+		{
 			name: "invalid mismatch tenant ID",
 			req: func() *http.Request {
 				req := httptest.NewRequest("GET", "/", nil)
