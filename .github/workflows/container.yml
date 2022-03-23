@@ -8,7 +8,6 @@ on:
 jobs:
   build-container:
     permissions:
-      contents: 'read'
       id-token: 'write'
     runs-on: ubuntu-latest
     steps:
