@@ -8,7 +8,7 @@ RUN go build -mod=readonly -o bridge -buildvcs=false -trimpath -ldflags "-w -s -
 # runtime image
 FROM alpine:3.15
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
-COPY --from=builder --chown=nonroot:nonroot /go/src/github.com/basemachina/bridge /bridge
+COPY --from=builder --chown=nonroot:nonroot /go/src/github.com/basemachina/bridge/bridge /bridge
 
 # hadolint ignore=DL3018
 RUN apk update && apk add --no-cache ca-certificates \
