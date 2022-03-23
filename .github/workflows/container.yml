@@ -13,7 +13,9 @@ jobs:
       - uses: docker/metadata-action@v3
         id: meta
         with:
-          images: ghcr.io/basemachina/bridge
+          images: |
+            ghcr.io/basemachina/bridge
+            gcr.io/basemachina/bridge
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -30,6 +32,17 @@ jobs:
           registry: ghcr.io
           username: basemachina
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v0'
+        id: auth
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      - uses: docker/login-action@v1
+        with:
+          registry: gcr.io
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
       - uses: docker/build-push-action@v2
         with:
           context: .
