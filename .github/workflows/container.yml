@@ -8,8 +8,9 @@ on:
 jobs:
   build-container:
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: read
+      packages: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
