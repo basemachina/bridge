@@ -183,6 +183,7 @@ func (f *FetchWorker) fetchPublicKey() (jwk.Set, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create a new request: %w", err)
 	}
+	req.Header.Add("User-Agent", serviceName+"/"+version)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
