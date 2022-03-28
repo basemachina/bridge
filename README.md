@@ -17,7 +17,7 @@ Bridge is a secure gateway that relays access from BaseMachina to a tenant's dat
 
 ## Q&A
 
-Please post any questions about the bridge or the hosted service on the [discussions](https://github.com/basemachina/basemachina/discussions).
+Please post any questions about the bridge or the hosted service on the [discussions](https://basemachina.com/canny).
 
 ## Bugs
 
