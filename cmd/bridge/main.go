@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/basemachina/bridge"
 	"github.com/go-logr/logr"
@@ -80,19 +79,4 @@ func NewLogger(env *bridge.Env) (logr.Logger, func(), error) {
 			Named(serviceName).
 			With(zap.String("version", version)),
 	), cleanup, nil
-}
-
-func NewHTTPServer(env *bridge.Env, handler http.Handler) (*http.Server, func(), error) {
-	srv := &http.Server{
-		Addr:    ":" + env.Port,
-		Handler: handler,
-	}
-	return srv, func() {
-		ctx, cancel := context.WithTimeout(
-			context.Background(),
-			5*time.Second,
-		)
-		defer cancel()
-		srv.Shutdown(ctx)
-	}, nil
 }
