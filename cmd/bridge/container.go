@@ -34,7 +34,7 @@ func BridgeContainerProvider() (*Container, func(), error) {
 		RegisterUserObject: auth.User{},
 	}
 	handler := bridge.NewHTTPHandler(httpHandlerConfig)
-	server, cleanup3, err := NewHTTPServer(env, handler)
+	server, cleanup3, err := bridge.NewHTTPServer(env.Port, handler)
 	if err != nil {
 		cleanup2()
 		cleanup()
