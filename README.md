@@ -4,7 +4,7 @@ This repository has been archived. Currently maintained privately.
 
 ## About bridge
 
-[![.github/workflows/test.yml](https://github.com/basemachina/bridge/actions/workflows/test.yml/badge.svg)](https://github.com/basemachina/bridge/actions/workflows/test.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/basemachina/bridge.svg)](https://pkg.go.dev/github.com/basemachina/bridge)
+[![Go Reference](https://pkg.go.dev/badge/github.com/basemachina/bridge.svg)](https://pkg.go.dev/github.com/basemachina/bridge)
 
 - https://about.basemachina.com
 - [Documentation](https://docs.basemachina.com/what_is_agent/)
