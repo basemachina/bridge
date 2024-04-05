@@ -9,8 +9,9 @@ import (
 	"github.com/basemachina/bridge/bridgehttp"
 	"github.com/basemachina/bridge/internal/ctxtime"
 	"github.com/go-logr/logr"
-	"github.com/lestrrat-go/jwx/jwk"
-	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jws"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
 const (
@@ -77,9 +78,8 @@ func Middleware(c *MiddlewareConfig) bridgehttp.Middleware {
 			// check also expired or not
 			t, err := jwt.ParseString(bearer,
 				jwt.WithValidate(true),
-				jwt.InferAlgorithmFromKey(true),
 				jwt.WithIssuer(issuerKey),
-				jwt.WithKeySet(c.PublicKeyGetter.GetPublicKey()),
+				jwt.WithKeySet(c.PublicKeyGetter.GetPublicKey(), jws.WithInferAlgorithmFromKey(true)),
 				jwt.WithClock(jwt.ClockFunc(func() time.Time {
 					return now
 				})),

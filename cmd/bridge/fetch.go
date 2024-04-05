@@ -13,7 +13,7 @@ import (
 	"github.com/basemachina/bridge"
 	"github.com/basemachina/bridge/internal/auth"
 	"github.com/go-logr/logr"
-	"github.com/lestrrat-go/jwx/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwk"
 )
 
 var _ auth.PublicKeyGetter = (*FetchWorker)(nil)
