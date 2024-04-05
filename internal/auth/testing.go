@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lestrrat-go/jwx/jwa"
-	"github.com/lestrrat-go/jwx/jwk"
-	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/lestrrat-go/jwx/v2/jwa"
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
 const Algorithm = jwa.PS256
@@ -32,7 +32,7 @@ func init() {
 }
 
 func GetPrivateJWK() (jwk.Key, error) {
-	key, err := jwk.New(privateKey)
+	key, err := jwk.FromRaw(privateKey)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func CreateJWT(user User) (*CreateJWTResult, error) {
 	}
 
 	set := jwk.NewSet()
-	set.Add(pubKey)
+	set.AddKey(pubKey)
 
 	now := time.Now()
 	token, err := CreateJWTWithUser(user, privKey)
@@ -95,7 +95,7 @@ func CreateJWTWithUser(user User, privateKey interface{}) (string, error) {
 
 	t.Set("user", user)
 
-	raw, err := jwt.Sign(t, Algorithm, privateKey)
+	raw, err := jwt.Sign(t, jwt.WithKey(Algorithm, privateKey))
 	if err != nil {
 		return "", fmt.Errorf("failed to sign jwt: %w", err)
 	}
