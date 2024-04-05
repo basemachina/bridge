@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"github.com/lestrrat-go/jwx/v2/jws"
 	"net/http"
 	"strings"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/basemachina/bridge/internal/ctxtime"
 	"github.com/go-logr/logr"
 	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jws"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
