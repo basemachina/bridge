@@ -1,6 +1,6 @@
 module github.com/basemachina/bridge
 
-go 1.21.9
+go 1.22.4
 
 require (
 	github.com/go-logr/logr v1.2.2

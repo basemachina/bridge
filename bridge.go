@@ -3,6 +3,7 @@ package bridge
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -14,17 +15,17 @@ import (
 )
 
 const (
-	OKPath    = "/ok"
-	OKMessage = "bridge is ready"
-	ProxyPath = "/htproxy"
+	OKPath                           = "/ok"
+	OKMessage                        = "bridge is ready"
+	ProxyPath                        = "/htproxy"
+	GetCheckConnectionServerAddrPath = "/get_check_connection_server_addr"
 )
 
 // Env stores configuration settings extract from enviromental variables
 // The practice getting from environmental variables comes from https://12factor.net.
 type Env struct {
 	// Port is port to listen HTTP server. Default is 8080.
-	// This value should be other than 4321. because "127.0.0.1:4321" is used in connection checking.
-	Port string `envconfig:"PORT" default:"8080" description:"bridge を HTTP としてサーブするために利用します。4321 以外を指定してください。"`
+	Port string `envconfig:"PORT" default:"8080" description:"bridge を HTTP としてサーブするために利用します。"`
 
 	// LogLevel is INFO or DEBUG. Default is "INFO".
 	LogLevel string `envconfig:"LOG_LEVEL" default:"INFO"`
@@ -44,22 +45,22 @@ type Env struct {
 
 // HTTPHandlerConfig is a config to setup bridge http handler.
 type HTTPHandlerConfig struct {
-	Logger             logr.Logger
-	PublicKeyGetter    auth.PublicKeyGetter
-	RegisterUserObject auth.TenantIDGetter
-	TenantID           string
-	Middlewares        []bridgehttp.Middleware
+	Logger                    logr.Logger
+	PublicKeyGetter           auth.PublicKeyGetter
+	RegisterUserObject        auth.TenantIDGetter
+	TenantID                  string
+	Middlewares               []bridgehttp.Middleware
+	CheckConnectionServerAddr string
 }
 
 // NewHTTPHandler is a handler for handling any requests.
 func NewHTTPHandler(c *HTTPHandlerConfig) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc(OKPath, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
+	mux.HandleFunc(fmt.Sprintf("GET %s", OKPath), func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(OKMessage))
+	})
+	mux.HandleFunc(fmt.Sprintf("GET %s", GetCheckConnectionServerAddrPath), func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(c.CheckConnectionServerAddr))
 	})
 	middlewares := append(c.Middlewares,
 		ctxtime.Middleware(),
@@ -77,19 +78,11 @@ func NewHTTPHandler(c *HTTPHandlerConfig) http.Handler {
 	return mux
 }
 
-// ConnectionCheckPort is used in connection check from API.
-const ConnectionCheckPort = "4321"
-
 func NewHTTPServer(envPort string, handler http.Handler) (*http.Server, func(), error) {
-	if envPort == ConnectionCheckPort {
-		return nil, nil, fmt.Errorf("PORT env should be other than 4321")
-	}
 	srv := &http.Server{
 		Addr:    ":" + envPort,
 		Handler: handler,
 	}
-
-	ServeCheckConnectionServer()
 
 	return srv, func() {
 		ctx, cancel := context.WithTimeout(
@@ -108,14 +101,19 @@ func NewHTTPServer(envPort string, handler http.Handler) (*http.Server, func(), 
 // because used only the connection check from API.
 //
 // Serve with goroutine.
-func ServeCheckConnectionServer() {
+func ServeCheckConnectionServer() (addr string, err error) {
+	ln, err := net.Listen("tcp", ":0")
+	if err != nil {
+		return "", fmt.Errorf("failed to listen a port for connection check: %w", err)
+	}
+
 	go func() {
-		err := http.ListenAndServe(
-			":"+ConnectionCheckPort,
-			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.Write([]byte(OKMessage))
-			}),
-		)
+		srv := &http.Server{Addr: addr, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte(OKMessage))
+		})}
+		err := srv.Serve(ln)
 		panic(fmt.Errorf("failed to serve a server to check connection from API: %w", err))
 	}()
+
+	return ln.Addr().String(), nil
 }
