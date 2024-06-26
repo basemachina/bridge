@@ -27,11 +27,16 @@ func BridgeContainerProvider() (*Container, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	checkConnectionServerAddr, err := bridge.ServeCheckConnectionServer()
+	if err != nil {
+		return nil, nil, err
+	}
 	httpHandlerConfig := &bridge.HTTPHandlerConfig{
-		Logger:             logger,
-		PublicKeyGetter:    fetchWorker,
-		TenantID:           env.TenantID,
-		RegisterUserObject: auth.User{},
+		Logger:                    logger,
+		PublicKeyGetter:           fetchWorker,
+		TenantID:                  env.TenantID,
+		RegisterUserObject:        auth.User{},
+		CheckConnectionServerAddr: checkConnectionServerAddr,
 	}
 	handler := bridge.NewHTTPHandler(httpHandlerConfig)
 	server, cleanup3, err := bridge.NewHTTPServer(env.Port, handler)
