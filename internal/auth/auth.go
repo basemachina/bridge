@@ -9,9 +9,9 @@ import (
 	"github.com/basemachina/bridge/bridgehttp"
 	"github.com/basemachina/bridge/internal/ctxtime"
 	"github.com/go-logr/logr"
-	"github.com/lestrrat-go/jwx/v2/jwk"
-	"github.com/lestrrat-go/jwx/v2/jws"
-	"github.com/lestrrat-go/jwx/v2/jwt"
+	"github.com/lestrrat-go/jwx/v3/jwk"
+	"github.com/lestrrat-go/jwx/v3/jws"
+	"github.com/lestrrat-go/jwx/v3/jwt"
 )
 
 const (
@@ -112,10 +112,9 @@ func Middleware(c *MiddlewareConfig) bridgehttp.Middleware {
 }
 
 func getTenantID(t jwt.Token) (string, bool) {
-	maybeUser, ok := t.Get("user")
-	if !ok {
+	var user TenantIDGetter
+	if err := t.Get("user", &user); err != nil {
 		return "", false
 	}
-	user, ok := maybeUser.(TenantIDGetter)
-	return user.GetTenantID(), ok
+	return user.GetTenantID(), true
 }

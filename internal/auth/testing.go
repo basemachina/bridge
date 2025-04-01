@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lestrrat-go/jwx/v2/jwa"
-	"github.com/lestrrat-go/jwx/v2/jwk"
-	"github.com/lestrrat-go/jwx/v2/jwt"
+	"github.com/lestrrat-go/jwx/v3/jwa"
+	"github.com/lestrrat-go/jwx/v3/jwk"
+	"github.com/lestrrat-go/jwx/v3/jwt"
 )
 
-const Algorithm = jwa.PS256
+var Algorithm = jwa.PS256()
 
 // CreateJWTResult is a result of CreateJWT
 type CreateJWTResult struct {
@@ -32,7 +32,7 @@ func init() {
 }
 
 func GetPrivateJWK() (jwk.Key, error) {
-	key, err := jwk.FromRaw(privateKey)
+	key, err := jwk.Import(privateKey)
 	if err != nil {
 		return nil, err
 	}

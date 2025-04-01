@@ -13,7 +13,7 @@ import (
 	"github.com/basemachina/bridge"
 	"github.com/basemachina/bridge/internal/auth"
 	"github.com/go-logr/logr"
-	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v3/jwk"
 )
 
 var _ auth.PublicKeyGetter = (*FetchWorker)(nil)
@@ -64,6 +64,7 @@ func NewFetchWorker(env *bridge.Env, l logr.Logger) (*FetchWorker, func(), error
 //   - If status code is kind of 400, I want the process to die.
 //   - If the error is retriable, keep retrying until it can be obtained
 //   - Wait for serve until public key can be obtained
+//
 // - If you have already obtained the public key
 //   - If it is a retriable error, keep retrying until it can be obtained.
 //   - Even if status code is kind of 400, the process continues to use the previously
